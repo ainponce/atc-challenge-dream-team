@@ -1,4 +1,5 @@
-import { Team } from '../types';
+import { useRouter } from "next/router";
+import { Team } from "../types";
 
 type TeamListProps = {
   teams: Team[];
@@ -6,14 +7,40 @@ type TeamListProps = {
 };
 
 const TeamList = ({ teams, onSelectTeam }: TeamListProps) => {
+  const router = useRouter();
+
+  const handleCreateTeam = () => {
+    router.push("/team-form");
+  };
+
+  const handleGoBack = () => {
+    router.back();
+  };
+
   return (
-    <ul>
-      {teams.map((team) => (
-        <li key={team.id} onClick={() => onSelectTeam(team.id)}>
-          {team.name}
-        </li>
-      ))}
-    </ul>
+    <div className="p-4 bg-white shadow-md rounded-lg">
+      <button
+        onClick={handleCreateTeam}
+        className="mb-4 bg-green-500 text-white p-2 rounded-md hover:bg-green-600"
+      >
+        Crear Equipo
+      </button>
+      {teams.length === 0 ? (
+        <p className="text-center text-gray-500">Aún no hay equipos creados</p>
+      ) : (
+        <ul className="space-y-2">
+          {teams.map((team) => (
+            <li
+              key={team.id}
+              onClick={() => onSelectTeam(team.id)}
+              className="p-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-100"
+            >
+              {team.name}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 };
 

@@ -17,7 +17,7 @@ const Home = () => {
         </Link>
 
         <a
-          href="https://github.com/your-repo-link"
+          href="https://github.com/ainponce/atc-challenge-dream-team"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center p-4 bg-gray-800 text-white rounded-lg shadow-lg hover:bg-gray-700"
