@@ -10,21 +10,19 @@ const TeamList = ({ teams, onSelectTeam }: TeamListProps) => {
   const router = useRouter();
 
   const handleCreateTeam = () => {
-    router.push("/team-form");
-  };
-
-  const handleGoBack = () => {
-    router.back();
+    router.push("/FormList");
   };
 
   return (
     <div className="p-4 bg-white shadow-md rounded-lg">
-      <button
-        onClick={handleCreateTeam}
-        className="mb-4 bg-green-500 text-white p-2 rounded-md hover:bg-green-600"
-      >
-        Crear Equipo
-      </button>
+      <div className="flex justify-center mb-4">
+        <button
+          onClick={handleCreateTeam}
+          className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600"
+        >
+          Crear Equipo
+        </button>
+      </div>
       {teams.length === 0 ? (
         <p className="text-center text-gray-500">Aún no hay equipos creados</p>
       ) : (

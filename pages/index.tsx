@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 const Home = () => {
   return (
@@ -22,7 +22,7 @@ const Home = () => {
           rel="noopener noreferrer"
           className="flex items-center justify-center p-4 bg-gray-800 text-white rounded-lg shadow-lg hover:bg-gray-700"
         >
-          <span className="text-xl font-semibold">GitHub</span>
+          <span className="text-xl font-semibold">Github</span>
         </a>
       </div>
     </div>

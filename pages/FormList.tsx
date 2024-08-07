@@ -1,8 +1,8 @@
 import React from "react";
 import { useRouter } from "next/router";
-import TeamList from "../components/TeamList";
+import TeamForm from "../components/TeamForm";
 
-const TeamListPage: React.FC = () => {
+const TeamFormPage: React.FC = () => {
   const router = useRouter();
 
   const handleGoBack = () => {
@@ -17,10 +17,10 @@ const TeamListPage: React.FC = () => {
       >
         Volver
       </button>
-      <h1 className="text-center my-8">Lista de Equipos</h1>
-      <TeamList teams={[]} onSelectTeam={() => {}} />
+      <h1 className="text-center my-8">Creación de Equipo</h1>
+      <TeamForm />
     </div>
   );
 };
 
-export default TeamListPage;
+export default TeamFormPage;

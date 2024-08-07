@@ -1,23 +1,23 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 const TeamForm = () => {
-  const [teamName, setTeamName] = useState('');
+  const [teamName, setTeamName] = useState("");
   const router = useRouter();
 
   const handleSubmit = () => {
-    if (teamName.trim() === '') return;
+    if (teamName.trim() === "") return;
 
     const newTeam = {
       id: Date.now().toString(),
       name: teamName,
     };
 
-    const existingTeams = JSON.parse(localStorage.getItem('teams') || '[]');
+    const existingTeams = JSON.parse(localStorage.getItem("teams") || "[]");
     existingTeams.push(newTeam);
-    localStorage.setItem('teams', JSON.stringify(existingTeams));
+    localStorage.setItem("teams", JSON.stringify(existingTeams));
 
-    router.push('/team-list');
+    router.push("/TeamList");
   };
 
   const handleGoBack = () => {
@@ -26,12 +26,6 @@ const TeamForm = () => {
 
   return (
     <div className="p-4 bg-white shadow-md rounded-lg">
-      <button
-        onClick={handleGoBack}
-        className="mb-4 text-blue-500 underline"
-      >
-        Volver atrás
-      </button>
       <h2 className="text-xl font-semibold mb-4">Crear Nuevo Equipo</h2>
       <input
         type="text"
