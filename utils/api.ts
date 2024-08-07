@@ -1,7 +1,9 @@
 import { Player, Team } from '../types';
 
+const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+
 const API_URL = 'https://apiv3.apifootball.com/';
-const API_KEY = '99a2b1c00c6e3ef063a5af2a2324e8610907538279ea322522aab24503bd399f';
+const API_KEY = apiKey;
 
 const handleResponse = async (res: Response) => {
   if (!res.ok) {
@@ -14,7 +16,7 @@ export const fetchPlayersByName = async (playerName: string): Promise<Player[]> 
   const res = await fetch(`${API_URL}?action=get_players&player_name=${encodeURIComponent(playerName)}&APIkey=${API_KEY}`);
   const data = await handleResponse(res);
 
-  // console.log('API response:', data);
+  console.log('API response:', data);
 
   if (!data) {
     console.error('No players found');
@@ -57,6 +59,7 @@ export const fetchTeamById = async (id: string): Promise<Team> => {
   return {
     id: data.team_id,
     name: data.team_name,
+    status: data.team_status,
     players: data.players.map((player: any) => ({
       id: player.player_id,
       name: player.player_name,

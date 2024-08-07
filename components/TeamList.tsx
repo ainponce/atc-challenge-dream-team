@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { Team, Player } from "../types";
 
 type TeamListProps = {
+  teams: Team[];
   onSelectTeam: (teamId: string) => void;
 };
 
@@ -19,7 +20,7 @@ const TeamList = ({ onSelectTeam }: TeamListProps) => {
   }, []);
 
   const handleCreateTeam = () => {
-    router.push("/team-form");
+    router.push("/FormList");
   };
 
   const handleTeamClick = (teamId: string) => {
