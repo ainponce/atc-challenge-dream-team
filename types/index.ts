@@ -11,4 +11,5 @@ export interface Player {
     id: string;
     name: string;
     players: Player[];
+    status : 'complete' | 'incomplete';
   }  

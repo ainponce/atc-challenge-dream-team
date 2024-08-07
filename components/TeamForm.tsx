@@ -20,10 +20,6 @@ const TeamForm = () => {
     router.push("/TeamList");
   };
 
-  const handleGoBack = () => {
-    router.back();
-  };
-
   return (
     <div className="p-4 bg-white shadow-md rounded-lg">
       <h2 className="text-xl font-semibold mb-4">Crear Nuevo Equipo</h2>
