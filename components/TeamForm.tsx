@@ -3,17 +3,29 @@ import { useRouter } from "next/router";
 
 const TeamForm = () => {
   const [teamName, setTeamName] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = () => {
-    if (teamName.trim() === "") return;
+    if (teamName.trim() === "") {
+      setError("El nombre del equipo es obligatorio.");
+      return;
+    }
+
+    const existingTeams = JSON.parse(localStorage.getItem("teams") || "[]");
+
+    if (existingTeams.length >= 2) {
+      setError("Ya llegó al límite de equipos que puede crear.");
+      return;
+    }
 
     const newTeam = {
       id: Date.now().toString(),
       name: teamName,
+      status: "formado",
+      players: [],
     };
 
-    const existingTeams = JSON.parse(localStorage.getItem("teams") || "[]");
     existingTeams.push(newTeam);
     localStorage.setItem("teams", JSON.stringify(existingTeams));
 
@@ -30,6 +42,7 @@ const TeamForm = () => {
         onChange={(e) => setTeamName(e.target.value)}
         className="w-full p-2 border rounded-md mb-4"
       />
+      {error && <p className="text-red-500 mb-4">{error}</p>}
       <button
         onClick={handleSubmit}
         className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"

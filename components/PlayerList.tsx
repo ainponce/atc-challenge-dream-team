@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { Player, Team } from '../types';
-import { fetchPlayersByName, fetchTeams } from '../utils/api';
-import PlayerCard from './PlayerCard';
+import { useState, useEffect } from "react";
+import { Player, Team } from "../types";
+import { fetchPlayersByName } from "../utils/api";
+import PlayerCard from "./PlayerCard";
 
 type Props = {
   onSelect: (player: Player) => void;
 };
 
 const PlayerList = ({ onSelect }: Props) => {
-  const [searchName, setSearchName] = useState('');
+  const [searchName, setSearchName] = useState("");
   const [players, setPlayers] = useState<Player[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -16,7 +16,7 @@ const PlayerList = ({ onSelect }: Props) => {
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async () => {
-    if (searchName.trim() === '') {
+    if (searchName.trim() === "") {
       setPlayers([]);
       setSearched(false);
       return;
@@ -27,31 +27,47 @@ const PlayerList = ({ onSelect }: Props) => {
 
     try {
       const result = await fetchPlayersByName(searchName);
-      const uniquePlayers = Array.from(new Map(result.map((player) => [player.id, player])).values());
+      const uniquePlayers = Array.from(
+        new Map(result.map((player) => [player.id, player])).values()
+      );
       setPlayers(uniquePlayers);
       setError(null);
     } catch (error) {
-      console.error('Error fetching players:', error);
+      console.error("Error fetching players:", error);
       setPlayers([]);
-      setError('Failed to fetch players');
+      setError("No existen jugadores con ese nombre.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleAssignPlayer = (player: Player, teamId: string) => {
-    console.log(`Asignar jugador ${player.name} al equipo ${teamId}`);
+    const existingTeams = JSON.parse(localStorage.getItem("teams") || "[]");
+    const updatedTeams = existingTeams.map((team: Team) => {
+      if (team.id === teamId) {
+        if (team.players.length >= 5) {
+          setError(
+            "El equipo ya se encuentra completo, edite el equipo para agregar este jugador."
+          );
+          return team;
+        }
+        return {
+          ...team,
+          players: [...team.players, player],
+        };
+      }
+      return team;
+    });
+
+    localStorage.setItem("teams", JSON.stringify(updatedTeams));
+    setTeams(updatedTeams);
+    setError(null);
   };
 
   useEffect(() => {
-    const loadTeams = async () => {
-      try {
-        const teamsData = await fetchTeams();
-        setTeams(teamsData);
-      } catch (error) {
-        console.error('Error fetching teams:', error);
-        setError('Failed to fetch teams');
-      }
+    const loadTeams = () => {
+      const teamsData = JSON.parse(localStorage.getItem("teams") || "[]");
+      setTeams(teamsData);
     };
 
     loadTeams();
@@ -75,9 +91,15 @@ const PlayerList = ({ onSelect }: Props) => {
           Buscar
         </button>
 
-        {loading && !error && !searched && <p className="text-blue-500 mt-4">Cargando...</p>}
-        {error && !loading && searched && <p className="text-red-500 mt-4">{error}</p>}
-        {!loading && searched && players.length === 0 && !error && <p className="text-gray-500 mt-4">No se encontraron jugadores</p>}
+        {loading && !error && !searched && (
+          <p className="text-blue-500 mt-4">Cargando...</p>
+        )}
+        {error && !loading && searched && (
+          <p className="text-red-500 mt-4">{error}</p>
+        )}
+        {!loading && searched && players.length === 0 && !error && (
+          <p className="text-gray-500 mt-4">No se encontraron jugadores</p>
+        )}
         {!loading && searched && players.length > 0 && (
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {players.map((player) => (
