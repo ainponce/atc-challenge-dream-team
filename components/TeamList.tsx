@@ -52,7 +52,7 @@ const TeamList = ({ onSelectTeam }: TeamListProps) => {
       <div className="flex justify-center mb-4">
         <button
           onClick={handleCreateTeam}
-          className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600"
+          className="bg-green-500 shadow-lg text-white p-2 rounded-md hover:bg-green-600"
         >
           Crear Equipo
         </button>
@@ -80,13 +80,13 @@ const TeamList = ({ onSelectTeam }: TeamListProps) => {
                 </div>
                 <div className="mb-4">
                   <h4 className="text-md font-semibold">Integrantes</h4>
-                  {team.players.length === 0 ? (
+                  {team.players?.length === 0 ? (
                     <p className="text-center text-gray-500">
                       No hay jugadores añadidos
                     </p>
                   ) : (
                     <ul className="space-y-2 mt-2">
-                      {team.players.map((player: Player) => (
+                      {team.players?.map((player: Player) => (
                         <li
                           key={player.id}
                           className="flex items-center space-x-3 p-2 bg-gray-100 border border-gray-300 rounded-md"

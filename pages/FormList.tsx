@@ -28,7 +28,7 @@ const TeamFormPage: React.FC = () => {
     <div className="relative">
       <button
         onClick={handleGoBack}
-        className="absolute top-4 left-4 px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600"
+        className="absolute top-4 left-4 px-4 py-2 bg-blue-500 text-white rounded-md -md hover:bg-blue-600"
       >
         Volver
       </button>
