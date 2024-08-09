@@ -1,55 +1,68 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { Team } from "../types";
 
-const TeamForm = () => {
-  const [teamName, setTeamName] = useState("");
-  const [error, setError] = useState("");
+type TeamFormProps = {
+  team?: Team | null;
+};
+
+const TeamForm: React.FC<TeamFormProps> = ({ team }) => {
   const router = useRouter();
+  const [name, setName] = useState<string>(team?.name || "");
 
-  const handleSubmit = () => {
-    if (teamName.trim() === "") {
-      setError("El nombre del equipo es obligatorio.");
-      return;
+  useEffect(() => {
+    if (team) {
+      setName(team.name);
+    }
+  }, [team]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const storedTeams = localStorage.getItem("teams");
+    let teams: Team[] = storedTeams ? JSON.parse(storedTeams) : [];
+
+    if (team) {
+      teams = teams.map((t) => (t.id === team.id ? { ...t, name } : t));
+    } else {
+      const newTeam: Team = {
+        id: Date.now().toString(),
+        name,
+        status: "incomplete",
+        players: [],
+      };
+      teams.push(newTeam);
     }
 
-    const existingTeams = JSON.parse(localStorage.getItem("teams") || "[]");
-
-    if (existingTeams.length >= 2) {
-      setError("Ya llegó al límite de equipos que puede crear.");
-      return;
-    }
-
-    const newTeam = {
-      id: Date.now().toString(),
-      name: teamName,
-      status: "formado",
-      players: [],
-    };
-
-    existingTeams.push(newTeam);
-    localStorage.setItem("teams", JSON.stringify(existingTeams));
-
+    localStorage.setItem("teams", JSON.stringify(teams));
     router.push("/TeamList");
   };
 
   return (
-    <div className="p-4 bg-white shadow-md rounded-lg">
-      <h2 className="text-xl font-semibold mb-4">Crear Nuevo Equipo</h2>
-      <input
-        type="text"
-        placeholder="Nombre del equipo"
-        value={teamName}
-        onChange={(e) => setTeamName(e.target.value)}
-        className="w-full p-2 border rounded-md mb-4"
-      />
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4">
+      <div className="mb-4">
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Nombre del Equipo
+        </label>
+        <input
+          id="name"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+          required
+        />
+      </div>
       <button
-        onClick={handleSubmit}
+        type="submit"
         className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
       >
-        Crear Equipo
+        {team ? "Actualizar Equipo" : "Crear Equipo"}
       </button>
-    </div>
+    </form>
   );
 };
 

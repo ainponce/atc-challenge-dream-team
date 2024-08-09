@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Team, Player } from "../types";
+import { FaTrash, FaRegEdit, FaTimes } from "react-icons/fa";
 
 type TeamListProps = {
   teams: Team[];
@@ -20,6 +21,30 @@ const TeamList = ({ onSelectTeam }: TeamListProps) => {
 
   const handleCreateTeam = () => {
     router.push("/FormList");
+  };
+
+  const handleEditTeam = (teamId: string) => {
+    router.push(`/FormList?id=${teamId}`);
+  };
+
+  const handleDeleteTeam = (teamId: string) => {
+    const updatedTeams = teams.filter((team) => team.id !== teamId);
+    setTeams(updatedTeams);
+    localStorage.setItem("teams", JSON.stringify(updatedTeams));
+  };
+
+  const handleDeletePlayer = (teamId: string, playerId: string) => {
+    const updatedTeams = teams.map((team) => {
+      if (team.id === teamId) {
+        return {
+          ...team,
+          players: team.players.filter((player) => player.id !== playerId),
+        };
+      }
+      return team;
+    });
+    setTeams(updatedTeams);
+    localStorage.setItem("teams", JSON.stringify(updatedTeams));
   };
 
   return (
@@ -43,17 +68,17 @@ const TeamList = ({ onSelectTeam }: TeamListProps) => {
             {teams.map((team) => (
               <div
                 key={team.id}
-                className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 shadow-lg p-4 bg-gray-100 border border-gray-300 rounded-lg"
+                className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-4 bg-gray-100 border border-gray-300 rounded-lg relative"
               >
                 <div className="mb-4">
                   <h3 className="text-lg font-semibold">{team.name}</h3>
                   <p className="text-sm">
-                    {team.status === "complete"
+                    {team.players.length === 5
                       ? "Estado: Completo"
                       : "Estado: Formado"}
                   </p>
                 </div>
-                <div>
+                <div className="mb-4">
                   <h4 className="text-md font-semibold">Integrantes</h4>
                   {team.players?.length === 0 ? (
                     <p className="text-center text-gray-500">
@@ -75,11 +100,33 @@ const TeamList = ({ onSelectTeam }: TeamListProps) => {
                             alt={player.name}
                             className="w-10 h-10 rounded-full"
                           />
-                          <span>{player.name}</span>
+                          <span className="flex-1">{player.name}</span>
+                          <button
+                            onClick={() =>
+                              handleDeletePlayer(team.id, player.id)
+                            }
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <FaTimes />
+                          </button>
                         </li>
                       ))}
                     </ul>
                   )}
+                </div>
+                <div className="absolute top-2 right-2 space-x-2">
+                  <button
+                    onClick={() => handleEditTeam(team.id)}
+                    className="text-green-500 hover:text-green-700"
+                  >
+                    <FaRegEdit />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteTeam(team.id)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <FaTrash />
+                  </button>
                 </div>
               </div>
             ))}
